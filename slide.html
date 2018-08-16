@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .window {
+            width: 300px;
+            height: 200px;
+            overflow: hidden;
+            border: 1px solid #aaa;
+        }
+
+        .images {
+            display: flex;
+            align-items: flex-start;
+            transition: all 1s;
+        }
+
+        .red {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="window">
+        <div class="images">
+            <img src="http://www.synchroedu.com/wp-content/uploads/2012/01/University-of-Manitoba-300-x-200.jpg" width=300 alt="图片1"
+                height=200>
+            <img src="http://www.synchroedu.com/wp-content/uploads/2012/01/University-of-Manitoba2-300-x-199.jpg" width=300 alt="图片2"
+                height=200>
+            <img src="http://www.synchroedu.com/wp-content/uploads/2012/01/Provencher-Bridge-300-x-200.jpg" width=300 alt="图片3" height=200>
+            <img src="http://www.synchroedu.com/wp-content/uploads/2012/01/ICM-Grad_20111014_248-300-x-187.jpg" width=300 alt="图片4" height=200>
+        </div>
+    </div>
+    <div id="buttons">
+        <span>第1张</span>
+        <span>第2张</span>
+        <span>第3张</span>
+        <span>第4张</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            let $buttons = $('#buttons > span')
+            for (let i = 0; i < $buttons.length; i++) {
+                $buttons.eq(i).on('click', function (e) {
+                    let index = $(e.currentTarget).index()
+                    $('.images').css({
+                        transform: 'translateX(' + index * -300 + 'px)'
+                    })
+                    n = index
+                    activeButton($buttons.eq(n))
+                })
+            }
+
+            let n = 0
+            let count = $buttons.length
+            $buttons.eq(n % count).trigger('click')
+
+            let timer = setTimer()
+
+            $('.window').on('mouseenter', function () {
+                clearInterval(timer)
+            })
+            $('.window').on('mouseleave', function () {
+                timer = setTimer()
+            })
+
+            function activeButton(currentButton) {
+                currentButton.addClass('red').siblings().removeClass('red')
+            }
+            function setTimer() {
+                return setInterval(function () {
+                    n += 1
+                    $buttons.eq(n % count).trigger('click').addClass('red').siblings().removeClass('red')
+                }, 3000)
+            }
+        })
+    </script>
+</body>
+
+</html>
