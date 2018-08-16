@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body,
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 490px;
+            height: 170px;
+            border: 2px solid #ccc;
+            margin: 100px auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .inner ul {
+            width: 510%;
+            position: absolute;
+        }
+
+        .inner ul li {
+            list-style: none;
+            float: left;
+        }
+
+        .inner .square {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            padding: 8px;
+        }
+
+        .inner .square span {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            font-size: 12px;
+            text-align: center;
+            background-color: #fff;
+            margin-left: 3px;
+            cursor: pointer;
+        }
+
+        .inner .square span.current {
+            background-color: darkorange;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="inner">
+            <ul>
+                <li>
+                    <img src="./images/01.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/02.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/03.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/04.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/05.jpg" alt="">
+                </li>
+            </ul>
+            <div class="square">
+                <span class="current">1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let inner = document.querySelector(".inner");
+        let imgWidth = inner.offsetWidth;
+        let ul = inner.children[0];
+        let spans = document.querySelectorAll('.square > span')
+        for (let i = 0; i < spans.length; i++) {
+            spans[i].index = i
+            spans[i].onmouseenter = function (e) {
+                let index = e.currentTarget.index
+                animate(ul, -imgWidth * index)
+                for (let j = 0; j < spans.length; j++) {
+                    spans[j].classList.remove('current')
+                }
+                spans[index].classList.add('current')
+            }
+        }
+
+
+        function animate(ele, target) {
+            clearInterval(ele.timer)
+            let speed = target > ele.offsetLeft ? 10 : -10
+            ele.timer = setInterval(function () {
+                ele.style.left = ele.offsetLeft + speed + 'px'
+                let val = target - ele.offsetLeft
+                if (Math.abs(val) <= Math.abs(speed)) {
+                    ele.style.left = target + 'px'
+                    clearInterval(ele.timer)
+                }
+            }, 10)
+        }
+
+    </script>
+</body>
+
+</html>
