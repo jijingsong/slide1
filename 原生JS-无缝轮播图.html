@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body,
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .wrapper {
+            width: 490px;
+            height: 170px;
+            border: 2px solid #ccc;
+            margin: 100px auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .inner ul {
+            width: 610%;
+            position: absolute;
+        }
+
+        .inner ul li {
+            list-style: none;
+            float: left;
+        }
+
+        .inner .square {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            padding: 8px;
+        }
+
+        .inner .square span {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            font-size: 12px;
+            text-align: center;
+            background-color: #fff;
+            margin-left: 3px;
+            cursor: pointer;
+        }
+
+        .inner .square span.current {
+            background-color: darkorange;
+            color: #fff;
+        }
+
+        .control {
+            width: 100%;
+            height: 40px;
+            position: absolute;
+            bottom: 0;
+            top: 0;
+            margin: auto;
+            ;
+        }
+
+        .control span {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 25px;
+            line-height: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .control span.left {
+            float: left;
+        }
+
+        .control span.right {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="inner">
+            <ul>
+                <li>
+                    <img src="./images/01.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/02.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/03.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/04.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/05.jpg" alt="">
+                </li>
+                <li>
+                    <img src="./images/01.jpg" alt="">
+                </li>
+            </ul>
+            <div class="control">
+                <span class="left">&lt;</span>
+                <span class="right">&gt;</span>
+            </div>
+            <div class="square">
+                <span class="current">1</span>
+                <span>2</span>
+                <span>3</span>
+                <span>4</span>
+                <span>5</span>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let inner = document.querySelector(".inner");
+        let imgWidth = inner.offsetWidth;
+        let ul = inner.children[0];
+        let spans = document.querySelectorAll('.square > span')
+        let btn = document.querySelectorAll('.control > span')
+        let num = 0
+        let square = 0
+        for (let i = 0; i < spans.length; i++) {
+            spans[i].index = i
+            spans[i].onmouseenter = function (e) {
+                let index = e.currentTarget.index
+                animate(ul, -imgWidth * index)
+                for (let j = 0; j < spans.length; j++) {
+                    spans[j].classList.remove('current')
+                }
+                spans[index].classList.add('current')
+                num = index
+                square = index
+            }
+        }
+        btn[1].onclick = function (e) {
+            autoPlay()
+        }
+        btn[0].onclick = function (e) {
+            num -= 1
+            if (num < 0) {
+                ul.style.left = -2450 + 'px'
+                num = 4
+            }
+            animate(ul, -490 * num)
+            square -= 1
+            if (square < 0) {
+                square = 4
+            }
+            for (let j = 0; j < spans.length; j++) {
+                spans[j].classList.remove('current')
+            }
+            spans[square].classList.add('current')
+        }
+
+        let timer = setInterval(autoPlay, 1000)
+
+        inner.onmouseenter = function () {
+            clearInterval(timer)
+        }
+        inner.onmouseleave = function () {
+            timer = setInterval(autoPlay, 1000)
+        }
+
+        function autoPlay() {
+            num += 1
+            if (num > 5) {
+                ul.style.left = 0
+                num = 1
+            }
+            animate(ul, -490 * num)
+            square += 1
+            if (square > 4) {
+                square = 0
+            }
+            for (let j = 0; j < spans.length; j++) {
+                spans[j].classList.remove('current')
+            }
+            spans[square].classList.add('current')
+        }
+        function animate(ele, target) {
+            clearInterval(ele.timer);
+            var speed = target > ele.offsetLeft ? 10 : -10;
+            ele.timer = setInterval(function () {
+                var val = target - ele.offsetLeft;
+                ele.style.left = ele.offsetLeft + speed + "px";
+                if (Math.abs(val) < Math.abs(speed)) {
+                    ele.style.left = target + "px";
+                    clearInterval(ele.timer);
+                }
+            }, 10)
+        }
+    </script>
+</body>
+
+</html>
