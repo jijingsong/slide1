@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .window {
+            width: 490px;
+            height: 170px;
+            overflow: hidden;
+            border: 1px solid #aaa;
+            margin: 150px auto;
+            position: relative;
+        }
+
+        .images {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .images img {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            transition: all 1s;
+        }
+
+        .images img.current {
+            left: 0;
+            transform: translateX(0);
+            z-index: 1;
+        }
+
+        .images img.enter {
+            transform: translateX(100%);
+        }
+
+        .images img.leave {
+            transform: translateX(-100%);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="window">
+        <div class="images">
+            <img src="./images/01.jpg" alt="">
+            <img src="./images/02.jpg" alt="">
+            <img src="./images/03.jpg" alt="">
+            <img src="./images/04.jpg" alt="">
+            <img src="./images/05.jpg" alt="">
+        </div>
+        <div class="control">
+            <!-- <span class="left">&lt;</span> -->
+            <span class="right">&gt;</span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            let n
+            init()
+
+            let timer = setInterval(autoPlay, 2000)
+
+            $('.window').on('mouseenter', () => {
+                clearInterval(timer)
+            })
+            $('.window').on('mouseleave', () => {
+                timer = setInterval(autoPlay, 2000)
+            })
+
+
+            function autoPlay() {
+                makeLeave(getImage(n))
+                    .one('transitionend', (e) => {
+                        makeEnter($(e.currentTarget))
+                    })
+                makeCurrent(getImage(n + 1))
+                n++
+            }
+
+            function makeLeave(img) {
+                return img.removeClass('current').addClass('leave')
+            }
+            function makeEnter(img) {
+                return img.removeClass('leave').addClass('enter')
+            }
+            function makeCurrent(img) {
+                return img.removeClass('enter').addClass('current')
+            }
+            function getImage(n) {
+                return $(`.images > img:nth-child(${x(n)})`)
+            }
+
+
+            function init() {
+                $('.images > img:nth-child(1)').addClass('current')
+                $('.images > img:nth-child(2)').addClass('enter')
+                $('.images > img:nth-child(3)').addClass('enter')
+                $('.images > img:nth-child(4)').addClass('enter')
+                $('.images > img:nth-child(5)').addClass('enter')
+                n = 0
+            }
+
+            function x(n) {
+                if (n > 5) {
+                    n = n % 5
+                    if (n === 0) {
+                        n = 5
+                    }
+                }
+                return n
+            }
+
+        })
+    </script>
+</body>
+
+</html>
